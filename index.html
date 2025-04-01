@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashutosh Sharma - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px; /* Base font size */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Light background */
+            color: #343a40; /* Dark text color */
+            line-height: 1.7;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            /* Add padding top to prevent content jump when sticky header appears */
+            /* padding-top: 0; /* Initially no padding */
+            /* transition: padding-top 0.4s ease; /* Smooth transition for padding */
+            /* Note: Adding padding-top can cause layout shifts. Let's try without it first. */
+        }
+
+        /* Container */
+        .container {
+            max-width: 960px; /* Max width */
+            margin: 0 auto;
+            padding: 0 1.5rem; /* Padding for smaller screens */
+        }
+
+        /* --- Sticky Header --- */
+        #sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95); /* White background with slight transparency */
+            backdrop-filter: blur(5px); /* Optional: blur effect for modern look */
+            padding: 0.8rem 1.5rem; /* Padding for the header */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            z-index: 1000; /* Ensure it's on top */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden;
+            transform: translateY(-100%); /* Start off-screen */
+            transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+        }
+
+        #sticky-header.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0); /* Slide in */
+        }
+
+        #sticky-header .header-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0; /* Reset padding as it's handled by parent */
+        }
+
+
+        #sticky-header .header-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #212529; /* Dark name */
+        }
+
+        #sticky-header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem; /* Spacing between nav items */
+        }
+
+        #sticky-header nav a {
+            text-decoration: none;
+            color: #495057; /* Medium grey links */
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        #sticky-header nav a:hover {
+            color: #212529; /* Darker grey/black on hover */
+        }
+        /* --- End Sticky Header --- */
+
+
+        /* Hero Section */
+        .hero {
+            min-height: 80vh; /* Keep this to define scroll trigger point */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 4rem 0; /* Keep padding within container */
+            opacity: 0; /* Initially hidden for animation */
+            animation: fadeIn 1s ease-out forwards;
+            position: relative; /* Needed for potential calculations */
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #212529; /* Very dark grey/black */
+            text-transform: uppercase; /* Ensure name is uppercase */
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            font-weight: 300; /* Lighter weight for subtitle */
+            color: #6c757d; /* Medium grey */
+            max-width: 600px;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 5rem 0;
+            opacity: 0; /* Hidden for scroll animation */
+            transform: translateY(30px); /* Start slightly lower */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        section h2 {
+            font-size: 2rem;
+            font-weight: 700; /* Bold section titles */
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            color: #212529; /* Very dark grey/black */
+        }
+
+        /* Underline effect for section titles - Dark grey */
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #343a40; /* Dark grey accent */
+            border-radius: 1.5px;
+        }
+
+        /* About Section */
+        #about p {
+            font-size: 1.1rem;
+            max-width: 750px;
+            margin-bottom: 1rem;
+        }
+
+        /* Experience Section */
+        .experience-item {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef; /* Light separator */
+        }
+        .experience-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .experience-item h3 { font-size: 1.4rem; font-weight: 500; margin-bottom: 0.25rem; color: #212529; }
+        .experience-item .company { font-size: 1.1rem; font-weight: 500; color: #343a40; margin-bottom: 0.5rem; display: block; }
+        .experience-item .date { font-size: 0.95rem; color: #6c757d; margin-bottom: 1rem; display: block; }
+        .experience-item ul { list-style: none; padding-left: 1.5rem; }
+        .experience-item ul li { margin-bottom: 0.75rem; position: relative; font-size: 1rem; color: #495057; }
+        .experience-item ul li::before { content: '•'; position: absolute; left: -1.5rem; color: #343a40; font-weight: bold; font-size: 1.2rem; line-height: 1; }
+
+        /* Skills Section */
+        .skills-list { list-style: none; display: flex; flex-wrap: wrap; gap: 0.75rem; }
+        .skills-list li { background-color: #e9ecef; color: #495057; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.95rem; font-weight: 500; transition: background-color 0.3s ease, color 0.3s ease; }
+        .skills-list li:hover { background-color: #212529; color: #fff; }
+
+        /* Contact Section */
+        #contact p { font-size: 1.1rem; margin-bottom: 1.5rem; }
+        .contact-link { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background-color: #212529; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 500; transition: background-color 0.3s ease, transform 0.2s ease; }
+        .contact-link:hover { background-color: #495057; transform: translateY(-2px); }
+
+        /* Footer */
+        footer { text-align: center; padding: 2rem 0; margin-top: 3rem; background-color: #e9ecef; color: #6c757d; font-size: 0.9rem; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            html { font-size: 15px; }
+            .hero { min-height: 60vh; text-align: center; align-items: center; }
+            section { padding: 4rem 0; }
+            section h2 { font-size: 1.8rem; margin-bottom: 2rem; text-align: center; }
+            section h2::after { left: 50%; transform: translateX(-50%); }
+            #about p, .experience-item ul, #contact p { padding: 0 0.5rem; }
+
+            /* Adjust sticky header for smaller screens */
+            #sticky-header { padding: 0.6rem 1rem; }
+            #sticky-header .header-name { font-size: 1rem; }
+            #sticky-header nav ul { gap: 1rem; }
+            #sticky-header nav a { font-size: 0.9rem; }
+        }
+         @media (max-width: 480px) {
+             /* Further adjustments for very small screens if needed */
+             #sticky-header nav ul { gap: 0.75rem; } /* Reduce gap more */
+             #sticky-header nav a { font-size: 0.85rem; }
+         }
+
+    </style>
+</head>
+<body>
+
+    <div id="sticky-header">
+        <div class="header-container container">
+            <div class="header-name">Ashutosh Sharma</div>
+            <nav>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <header class="hero container" id="hero-section"> <h1>ASHUTOSH SHARMA</h1>
+        <p>Senior Software Engineer | Building Scalable Systems ☁️ | Cloud Enthusiast</p>
+        </header>
+
+    <main>
+        <section id="about" class="container">
+            <h2>About Me 👨‍💻</h2>
+            <p>
+                Highly motivated and experienced Senior Software Engineer with a passion for designing, developing, and deploying robust and scalable software solutions. Proven ability to work effectively in fast-paced environments and collaborate seamlessly with cross-functional teams.
+            </p>
+            <p>
+                Expertise in [Mention Key Technologies like Java, Python, Go, etc.], cloud platforms like [AWS/Azure/GCP], and microservices architecture. Always eager to learn new technologies and contribute to challenging projects. ✨
+            </p>
+            </section>
+
+        <section id="experience" class="container">
+            <h2>Experience 🚀</h2>
+            <div class="experience-item">
+                <h3>Senior Software Engineer</h3>
+                <span class="company">Awesome Tech Company</span>
+                <span class="date">Jan 2022 - Present · X yrs Y mos</span>
+                <ul>
+                    <li>✅ Led the development of [Specific Project or Feature].</li>
+                    <li>✅ Designed and implemented scalable microservices using [Technology].</li>
+                    <li>✅ Mentored junior engineers and conducted code reviews.</li>
+                    <li>✅ Improved system performance by X% through optimizations.</li>
+                </ul>
+            </div>
+            <div class="experience-item">
+                <h3>Software Engineer</h3>
+                <span class="company">Previous Cool Company</span>
+                <span class="date">Jun 2019 - Dec 2021 · 2 yrs 7 mos</span>
+                 <ul>
+                    <li>💡 Contributed to the development of [Another Project].</li>
+                    <li>💡 Worked with [Technology/Tools] to build features.</li>
+                    <li>💡 Collaborated with product managers and designers.</li>
+                </ul>
+            </div>
+            </section>
+
+        <section id="skills" class="container">
+            <h2>Skills 🛠️</h2>
+            <ul class="skills-list">
+                <li>Java</li> <li>Python</li> <li>Spring Boot</li> <li>Microservices</li>
+                <li>AWS</li> <li>Docker</li> <li>Kubernetes</li> <li>SQL</li> <li>NoSQL</li>
+                <li>Git</li> <li>Agile Methodologies</li> <li>System Design</li>
+            </ul>
+            </section>
+
+        <section id="contact" class="container">
+            <h2>Get In Touch 👋</h2>
+             <p>
+                I'm always open to discussing new opportunities or interesting projects. Feel free to reach out!
+            </p>
+            <a href="#" class="contact-link">Connect on LinkedIn 🔗</a>
+             </section>
+    </main>
+
+    <footer>
+        <div class="container">
+             <p>&copy; 2025 Ashutosh Sharma. All rights reserved.</p>
+            </div>
+    </footer>
+
+    <script>
+        // --- Intersection Observer for Section Animations ---
+        const sections = document.querySelectorAll('section');
+        const sectionObserverOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 // Trigger when 15% visible
+        };
+        const sectionObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // observer.unobserve(entry.target); // Optional: Animate only once
+                }
+                // else { // Optional: Animate every time
+                //     entry.target.classList.remove('visible');
+                // }
+            });
+        }, sectionObserverOptions);
+        sections.forEach(section => {
+            sectionObserver.observe(section);
+        });
+
+        // --- Sticky Header Logic ---
+        const stickyHeader = document.getElementById('sticky-header');
+        const heroSection = document.getElementById('hero-section'); // Target the hero section
+
+        // Function to toggle sticky header visibility
+        const toggleStickyHeader = () => {
+            if (!heroSection || !stickyHeader) return; // Exit if elements not found
+
+            // Calculate the point where the bottom of the hero section leaves the viewport
+            const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+            const scrollThreshold = heroBottom - 50; // Show header slightly before hero is fully gone
+
+            if (window.scrollY > scrollThreshold) {
+                stickyHeader.classList.add('visible');
+                // Optional: Add padding to body if needed to prevent content jump
+                // document.body.style.paddingTop = `${stickyHeader.offsetHeight}px`;
+            } else {
+                stickyHeader.classList.remove('visible');
+                // Optional: Remove padding from body
+                // document.body.style.paddingTop = '0';
+            }
+        };
+
+        // Attach the function to the scroll event
+        window.addEventListener('scroll', toggleStickyHeader);
+
+        // Initial check in case the page loads already scrolled down
+        toggleStickyHeader();
+
+    </script>
+
+</body>
+</html>
